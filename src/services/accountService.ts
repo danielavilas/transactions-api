@@ -18,8 +18,6 @@ export class AccountService {
     });
 
     return await this.accountRepository.save(account);
-
-    // return account;
   }
 
   async getAccount(userEmail: string): Promise<Account | null> {
