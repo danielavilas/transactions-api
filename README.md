@@ -101,4 +101,4 @@ npm run db:seed:large
 ```
 
 ### OpenAPI Spec
-The OpenAPI Spec file (swagger.yml) is available for testing purposes. You can open it in the [Swagger Editor](https://editor.swagger.io/) or [Postman](https://www.postman.com/) to explore and interact with the API documentation.
+The OpenAPI Spec file ([swagger.yml](https://github.com/danielavilas/transactions-api/blob/main/swagger.yml)) is available for testing purposes. You can open it in the [Swagger Editor](https://editor.swagger.io/) or [Postman](https://www.postman.com/) to explore and interact with the API documentation.
