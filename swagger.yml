@@ -1,0 +1,222 @@
+openapi: 3.0.0
+info:
+  title: Backend Challenge API
+  version: 1.0.0
+paths:
+  /api/v1/accounts/{userEmail}:
+    get:
+      summary: Get account by userEmail
+      parameters:
+        - name: userEmail
+          in: path
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '400':
+          description: Invalid userEmail supplied
+        '404':
+          description: Account not found
+  /api/v1/accounts:
+    post:
+      summary: Create a new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+      responses:
+        '201':
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAccountResponse'
+        '400':
+          description: Invalid input
+  /api/v1/transactions:
+    get:
+      summary: Get transactions
+      parameters:
+        - name: userEmail
+          in: query
+          schema:
+            type: string
+            format: email
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: ['receive', 'send']
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsResponse'
+        '400':
+          description: Invalid input
+    post:
+      summary: Create a new transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+      responses:
+        '201':
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTransactionResponse'
+        '400':
+          description: Invalid input
+components:
+  schemas:
+    AccountResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        userEmail:
+          type: string
+          format: email
+        balance:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        transactions:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              userEmail:
+                type: string
+                format: email
+              amount:
+                type: number
+              type:
+                type: string
+              createdAt:
+                type: string
+                format: date-time
+    CreateAccountRequest:
+      type: object
+      required:
+        - userEmail
+      properties:
+        userEmail:
+          type: string
+          format: email
+    CreateAccountResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        userEmail:
+          type: string
+          format: email
+        balance:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateTransactionRequest:
+      type: object
+      required:
+        - userEmail
+        - amount
+        - type
+      properties:
+        userEmail:
+          type: string
+        amount:
+          type: number
+        type:
+          type: string
+          enum: ['receive', 'send']
+    CreateTransactionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        userEmail:
+          type: string
+          format: email
+        amount:
+          type: number
+        type:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    TransactionsResponse:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalPages:
+          type: integer
+        totalItems:
+          type: integer
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        userEmail:
+          type: string
+          format: email
+        amount:
+          type: number
+        type:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
