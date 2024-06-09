@@ -28,6 +28,7 @@ const mockAccountRepository = {
 
 const mockTransactionRepository = {
   find: jest.fn(),
+  findAndCount: jest.fn(),
   save: jest.fn(),
 } as unknown as Repository<Transaction>;
 
@@ -48,13 +49,14 @@ describe('TransactionService', () => {
         { id: 2, userEmail: 'test@example.com', amount: 50, type: 'send', createdAt: new Date() },
       ];
 
-      (mockTransactionRepository.find as jest.Mock).mockResolvedValueOnce(mockTransactions);
+      (mockTransactionRepository.findAndCount as jest.Mock).mockResolvedValueOnce([mockTransactions, 2]);
 
-      const transactions = await transactionService.getTransactions({ page: 1, pageSize: 10 });
+      const { transactions, totalItems } = await transactionService.getTransactions({ page: 1, pageSize: 10 });
 
-      expect(mockTransactionRepository.find).toHaveBeenCalledTimes(1);
+      expect(mockTransactionRepository.findAndCount).toHaveBeenCalledTimes(1);
 
       expect(transactions).toEqual(mockTransactions);
+      expect(totalItems).toEqual(2);
     });
   });
 
